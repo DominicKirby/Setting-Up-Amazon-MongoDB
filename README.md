@@ -29,7 +29,10 @@ First step is moving the key file into .ssh folder in your directory to be acces
 Use the following command: 
 ```
 mv ~/download_folder/key_title.pem ~/.ssh
+chmod 400 ~/.ssh/key_title.pem
 ```
+
+With chmod 400 ensuring that the accessibility of the key is correct
 
 #### Accessing the Linux cloud server 
 This next line of code connects you into the server online:
@@ -55,7 +58,7 @@ Where -y skips a step of confirmation and allows for simpler progression.
 The first step is installing the correct packages to allow us to download everything onto the
 Linux instance.
 ```
-sudo apt instal gnupg curl
+sudo apt install gnupg curl
 ```
 
 This installs gnupg and curl packages to be used later
@@ -80,6 +83,7 @@ Finally we ensure everything is up to date and ready
 sudo apt update
 ```
 Then,
+
 ```
 sudo apt install -y mongodb-org
 ```
@@ -87,9 +91,27 @@ sudo apt install -y mongodb-org
 #### Starting MongoDB in this instance
 
 This code starts Mongo Daemon and checks it correctly loaded up
+
 ```
 sudo systemctl start mongod
 sudo systemctl status mongod
+```
+
+Then you need to ensure that the access to this database is allowing all IP addresses
+not just the servers IP.
+
+We do this through accessing and changing the configuration of the Mongo Daemon, use the
+following code: 
+
+```
+sudo nano /etc/mongod.conf
+```
+
+Then in this section we set the BindIP to 0.0.0.0, which we then restart the client with the
+following code.
+
+```
+sudo systemctl restart mongod
 ```
 
 ## Python Section 
@@ -100,7 +122,7 @@ import pymongo
 
 client = pymongo.MongoClient("mongodb://public_ip:27017")
 
-db = client["ec2]
+db = client["ec2"]
 ```
 
 You can then deal with this in python and it will all be updated to the online server while 
